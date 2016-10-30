@@ -1,3 +1,12 @@
+-- Do a wrapper call for function call.
+local function wrapper_call(func, ...)
+	result = {pcall(func, ...)}
+	if not result[1] then
+		error(result[2]:gsub("^.*:.*:%s", ""), 2)
+	end
+	return select(2, unpack(result))
+end
+
 utils.iterate = function(l, t, c)
 	local a = l[t]
 	if type(a) == "table" then
@@ -32,4 +41,18 @@ utils.stylefunc = function(arr)
 		if type(arr[line.style]) == "nil" then return end
 		arr[line.style](l, line, li)
 	end)
+end
+
+utils._frames = utils.frames
+utils.frames = function(t, c, f)
+	local s, e
+	if t.s then
+		s, e = t.s, t.e
+	else
+		s, e = t.start_time, t.end_time
+	end
+	f = f and f or 24000 / 1001
+	for s, e, i, n in wrapper_call(Yutils.algorithm.frames, s, e, f) do
+		c(s, e, i, n)
+	end
 end

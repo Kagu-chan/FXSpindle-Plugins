@@ -1,5 +1,19 @@
-function utils.particles(count, line, obj, stretch_min, stretch_max, ass, shape, frame_duration, fade_in, fade_out, trace)
-    
+local utils_frames = utils._frames or utils.frames
+
+function utils.particles(line, obj, count, stretch_min, stretch_max, callback)
+    frame_duration = 24000 / 1001
+
+    for ei, en, mx, my, ox, oy, shap in utils.explode(
+        obj, 
+        line.styleref, 
+        count, 
+        math.random(stretch_min * 10, stretch_max * 10) / 10)
+    do
+        utils.frames(line, function(fs, fe, fi, fn)
+            callback(ei, en, mx, my, ox, oy, shap, fs, fe, fi, fn)
+        end)
+    end
+--[[
     local function get_point(a, b, c, x)
         -- f(x) = ax² + bx + c
         return {x, math.round(((a*x)*(a*x) + b*x + c) / 10, 3)}
@@ -16,7 +30,7 @@ function utils.particles(count, line, obj, stretch_min, stretch_max, ass, shape,
         local stretch = stretch_min + (math.random((stretch_max - stretch_min) * 10) / 10) -- Zufällige Steigung im Rahmen der Parameter
         
         local duration = line.end_time - line.start_time
-        for s, e, i, n in utils.frames(line.start_time, line.end_time, frame_duration) do
+        for s, e, i, n in utils_frames(line.start_time, line.end_time, frame_duration) do
             local function get_alpha()
                 local c = i * frame_duration
                 local v = 255
@@ -46,5 +60,5 @@ function utils.particles(count, line, obj, stretch_min, stretch_max, ass, shape,
 
         if trace then print(("Particles: %.3d from %.3d"):format(i, count)) end
     end
-    
+  ]]  
 end
