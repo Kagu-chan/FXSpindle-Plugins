@@ -461,7 +461,7 @@ function arrToLua(arr, name, file)
 	oFile:close()
 end
 
-function parseSpectrumFile(filename, overwrite, create)
+function parseSpectrumFile(filename, overwrite, create, argPath)
 	print("Start parsing spectrum file - overwrite is set to " .. (overwrite and "TRUE" or "FALSE"))
 
 	local result
@@ -476,7 +476,10 @@ function parseSpectrumFile(filename, overwrite, create)
 		end
 	end
 
-	local ifile = io.open(filename, "r")
+	local ifile = io.open(
+		argPath and arg[4] .. "\\" .. filename or filename,
+		"r"
+	)
 	local content = ifile:read("*a")
 	ifile:close()
 
