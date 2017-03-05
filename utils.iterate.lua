@@ -48,15 +48,35 @@ utils.stylefunc = function(arr)
 end
 
 utils._frames = utils.frames
-utils.frames = function(t, c, f)
-	local s, e
-	if t.s then
-		s, e = t.s, t.e
+utils.frames = function(t_or_s, e_or_c_or_f, c_or_f, f_or_nil)
+	local s, e, c, f
+	if type(t_or_s) == "table" then
+		if t.s then
+			s, e = t.s, t.e
+		else
+			s, e = t.start_time, t.end_time
+		end
+		if type(e_or_c_or_f) == "function" then
+			c = e_or_c_or_f
+			f = c_or_f
+		else
+			f = e_or_c_or_f
+		end
 	else
-		s, e = t.start_time, t.end_time
+		s, e = t_or_s, e_or_c_or_f
+		if type(c_or_f) == "function" then
+			c = c_or_f
+			f = f_or_nil
+		else
+			f = c_or_f
+		end
 	end
 	f = f and f or 24000 / 1001
-	for s, e, i, n in wrapper_call(Yutils.algorithm.frames, s, e, f) do
-		c(s, e, i, n)
+	if c then
+		for s, e, i, n in wrapper_call(Yutils.algorithm.frames, s, e, f) do
+			c(s, e, i, n)
+		end
+	else
+		return wrapper_call(Yutils.algorithm.frames, s, e, f)
 	end
 end
