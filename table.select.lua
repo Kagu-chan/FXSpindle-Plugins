@@ -14,5 +14,6 @@ table.select = function(t, callback, max_items)
 	return result
 end
 table.select_first = function(t, callback)
-	return table.select(t, callback, 1)
+	local result = table.reset_indexes(table.select(t, callback, 1))
+	return result[1] or false
 end
