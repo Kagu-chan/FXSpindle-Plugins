@@ -8,7 +8,7 @@ shape.to_table = function(shap)
 end
 
 shape.pixel = function(scale)
-	return ("m 0 0 l %d 0 %d %d 0 %d"):format(scale, scale, scale, scale)
+	return ("m 0 0 l %.1f 0 %.1f %.1f 0 %.1f"):format(scale, scale, scale, scale)
 end
 
 utils.explode = function(t, styleref, step, scale)
