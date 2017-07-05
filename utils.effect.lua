@@ -9,7 +9,8 @@ utils.effect = function(l, effects, ...)
             effects[i] = effect:gsub("&LAYER&", layers[i])
         end
     end
-    for _, e in ipairs(effects) do
+    for i, e in ipairs(effects) do
+        l.layer = l.layer + i
         l.text = e:format(unpack(values))
         io.write_line(l)
     end
